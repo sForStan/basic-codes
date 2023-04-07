@@ -196,3 +196,105 @@ Status GetElem(LinkList L, int i, ElemType& e)
 	e = p->data;
 	return OK;
 }
+//单链表的查找
+//按值查找--根据指定数据获取该数据所在的位置（地址）
+//从第一个结点开始依次与e比较，找到 则返回，没找到返回0或者返回空
+Lnode* LocateElem_L(LinkList L, ElemType e)
+{
+	int j;
+	Lnode* p;
+	p = L->next;
+	while (p&&p->data!=e)
+	{
+		p = p->next;
+		return p;	
+	}
+}
+//按值查找-根据数据获取该数据的位置序号
+int LocateElem(LinkList L, ElemType e)
+{
+	Lnode* p;;
+	p = L->next;
+	int j = 1;
+	while (p && p->data != e)
+	{
+		p = p->next;
+		j++;
+	}
+	if (p)return j;
+	else return 0;
+}
+//插入-在第i个结点前插入值为e的新结点
+//找到第（i-1）个结点储存位置 p，生成一个数据域为e的新结点s
+//插入新结点 新结点的指针域指向ai，a（i-1）的指针域指向新结点
+Status InsertList(LinkList& L, int i, ElemType e)
+{
+	Lnode* s;
+	Lnode* p = L;
+	int j = 0;
+	while (p && j < i - 1)
+	{
+		p = p->next;
+		++j;
+	}
+	//异常判断
+	if (!p || i < 0)
+		return ERROR;
+	s = new Lnode;
+	s->data = e;//生成新结点s
+	s->next = p->next;//将结点S插入L当中
+	p->next = s;
+}
+//删除--删除第i个结点
+//找到第i-1个结点，保存要删除的第i个结点的值，令指针指向第（i+1）个结点
+//释放删除结点的空间
+Status ListDelete_L(LinkList& L, int i, ElemType& e)
+{
+	int j = 0;
+	Lnode* p,*q;
+	p = L;
+	while (p->next&&j<i-1)
+	{
+		p = p->next;
+		j++;
+	}
+	if (!(p->next) || i < 0)
+		return ERROR;
+	q = p->next;//临时保存被删结点的地址
+	p->next = q->next;//改变删除结点前驱结点的地址以备释放
+	e = q->data;//保存删除结点的控制域
+	delete p;
+	return OK;
+}
+//单链表的建立：头插法--元素插在链表头部，也叫前插法
+//生成一个链表，将新结点依次插入链表前端
+void CreatListHead(LinkList& L, int n)
+{
+	L = new Lnode;
+	p = new Lnode;
+	L->next = NULL;
+	Lnode* p;
+	for (int i = n; i > 0; i--)
+	{
+
+		cin >> p->data;
+		p->next = L->next;//插入到表头
+		L->next = p;
+	}
+}
+//尾插法
+void CreatListR(LinkList& L, int n)
+{
+	p = new Lnode;
+	L = new Lnode;
+	L->next=NULL:
+	Lnode * r,*p;
+	r = L;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> p->data;
+		p->next = NULL;
+		r->next = p;
+		r = p;
+	}
+}
