@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+
 #define MAXSIZE 1000
 #define OK 1
 #define OVERFLOW  -2
@@ -270,14 +271,14 @@ Status ListDelete_L(LinkList& L, int i, ElemType& e)
 //生成一个链表，将新结点依次插入链表前端
 void CreatListHead(LinkList& L, int n)
 {
+	Lnode* p;
 	L = new Lnode;
 	p = new Lnode;
 	L->next = NULL;
-	Lnode* p;
+		
 	for (int i = n; i > 0; i--)
 	{
-
-		cin >> p->data;
+		scanf_s("%d",&( p->data));
 		p->next = L->next;//插入到表头
 		L->next = p;
 	}
@@ -285,16 +286,64 @@ void CreatListHead(LinkList& L, int n)
 //尾插法
 void CreatListR(LinkList& L, int n)
 {
+	Lnode* r, * p;
 	p = new Lnode;
 	L = new Lnode;
-	L->next=NULL:
-	Lnode * r,*p;
+	L->next = NULL;
 	r = L;
 	for (int i = 0; i < n; i++)
 	{
-		cin >> p->data;
+		scanf_s("%d", &(p->data));
 		p->next = NULL;
 		r->next = p;
 		r = p;
 	}
 }
+//循环链表：是一种头尾相接的链表（表中最后一个结点的指针域指向头结点）
+//整个链表形成一个环
+//由于循环链表中没有NULL指针，故涉及遍历操作时，其终止条件为判断它是否等于头指针
+//带尾指针的循环链表合并
+//Tb表头链接到Ta表尾，释放Tb头结点
+LinkList Connect(LinkList Ta, LinkList Tb)
+{
+	Lnode* p;
+	p = Ta->next;
+	Ta->next = Tb->next->next;
+	delete Tb->next;
+	Tb->next = p;
+	return Tb;
+}
+ //双链表（double link list）
+//双链表的定义
+typedef struct DuLNode
+{
+	ElemType data;
+	struct DuLNode* prior, * next;
+}DuLNode,*DuLinkList;
+//双向链表的插入
+void ListInsertDuL(DuLinkList& L, int i, ElemType e)
+{
+	DuLNode *s,*p;
+	if (!(p = GetElem(L, i,e)))
+		return 0;
+	s = new DuLNode;
+	s->data = e;
+	s->prior = p->prior;
+	p->prior->next = s;
+	s->next = p;
+	p->piror = s;
+	return OK;
+}
+//双向链表的删除
+void ListDeleteDul(DuLinkList& L, int i, ElemType& e)
+{
+	DuLNode* p;
+	if (!(p = GetElemP(L, i)))
+		return ERROR;
+	e = p->data;
+	p->prior->next = p->next;
+	p->next->prior = p->prior;
+	free(p);
+	return OK;
+}
+//线性表的合并
