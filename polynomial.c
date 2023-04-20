@@ -163,6 +163,20 @@ void combin2List(Link head_a, Link head_b, Link head_ab)
 	pa = pa ? pa:pb;
 	return;
 }
+void clear_list(Link list)
+{
+	Link p, q;
+	p = list;
+	q = list->next;
+	while (p)
+	{
+		free(p);
+		p = q;
+		q = p->next;
+	}
+	if (NULL == list)
+		return;
+}
 int main()
 {
 	Link headA, headB;//两个多项式的头指针
@@ -188,5 +202,8 @@ int main()
 	combin2List(headA, headB, headAB);
 	printf("合并后");
 	print(headAB);
+	clear_list(headA);
+	clear_list(headB);
+	clear_list(headAB);
 	return 0;
 }
