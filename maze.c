@@ -1,122 +1,133 @@
 #include<stdio.h>
 #include<stdbool.h>
-typedef struct Box
-{
-	int x;	//行坐标
-	int y;	//列坐标
-	int dir;	//方向
+typedef struct box{
+	int x;
+	int y;
+	int di;
 }Box;
-
-typedef struct {
-	Box data[1024];
-	int top;	//栈顶指针（-1为空）
+typedef struct sta{
+	Box data[100];
+	int top;
 }Stack;
-int maze[6][6] = {
+int maze[6][6]={
 	{0,0,0,0,0,0},
 	{0,1,0,1,1,0},
 	{0,1,0,0,1,0},
 	{0,1,1,0,0,1},
 	{0,1,1,0,0,1},
-	{0,0,0,0,0,0}
+	{0,0,0,0,0,0},
 };
-void InitStack(Stack* s)
+void Init_Stack(Stack* s)
 {
-	s->top = -1;
+	s->top=-1;
 }
-void push(Stack* s,Box b)
+bool isFull(Stack* s)
 {
-	if (s->top == 1023)
-	{
+	if(s->top==100)
+		return true;
+	else
+		return false;
+}
+bool isEmpty(Stack* s)
+{
+	if(s->top==-1)
+		return true;
+	else
+		return false;
+}
+void push(Stack* s,Box dat)
+{
+	if(isFull(s))
 		return;
-	}
-	s->data[++(s->top)] = b;
+	else
+	s->data[++(s->top)]=dat;
 }
-bool EmptyStack(Stack* s)
-{
-	return (s->top == -1)?true:false;
-}
-void GetTop(Stack* s, Box* b)
-{
-	*b = s->data[s->top];
-}
-void pop(Stack *s)
+void pop(Stack* s)
 {
 	s->top--;
 }
-void ShowPath(Stack* s)
+void get_top(Stack* s,Box* dat)
+{
+	*dat=s->data[s->top];
+}
+int count=0;
+void show_path(Stack* s)
 {
 	int i;
-	for (i = 0; i <=s->top ; i++)
-	{
-		printf("(%d,%d)->",s->data[i].x,s->data[i].y);
-	}
+	printf("way %d:\t",++count);
+	for(i=0;i<=s->top;i++)
+		printf("(%d,%d)",s->data[i].x,s->data[i].y);
 	printf("\n");
 }
-void Walk(Stack* s, int x1, int y1, int x2, int y2)
+void get_path(Stack* s,int startX,int startY,int endX,int endY)
 {
-	Box now;
-	now.x = x1;
-	now.y = y1;
-	now.dir = -1;
-	push(s, now);	//起点进栈
-	maze[now.x][now.y] = -1;
-	while (!EmptyStack(s))	//栈不空
+	Box temp;
+	temp.x=startX;
+	temp.y=startY;
+	temp.di=-1;
+	push(s,temp);
+	maze[temp.x][temp.y]=-1;
+	while(!isEmpty(s))
 	{
-		GetTop(s, &now);
-		if (now.x == x2 && now.y == y2)
+		get_top(s,&temp);
+		if(temp.x==endX&&temp.y==endY)
 		{
-			ShowPath(s);
-			maze[now.x][now.y] = 0;	//点没有走过
+			show_path(s);
+			maze[temp.x][temp.y]=0;
 			pop(s);
 		}
 		else
 		{
-			int k,i,j;
-			for (k = now.dir+1; k < 4; k++)
+			int direct,line,col;
+			for(direct=temp.di+1;direct<4;direct++)
 			{
-				switch (k)
-				{
+
+				switch(direct)
+				{	
 				case 0:
-					i = now.x - 1;
-					j = now.y;
+					line=temp.x-1;
+					col=temp.y;
 					break;
 				case 1:
-					i = now.x;
-					j = now.y + 1;
+					line=temp.x;
+					col=temp.y+1;
 					break;
 				case 2:
-					i = now.x + 1;
-					j = now.y;
+					line=temp.x+1;
+					col=temp.y;
 					break;
 				case 3:
-					i = now.x;
-					j = now.y-1;
+					line=temp.x;
+					col=temp.y-1;
 					break;
 				}
-				Box t;
-				if (i >= 0 && i <= 5 && j >= 0 && j <= 5 && maze[i][j] == 0)
+				Box next;
+				if(maze[line][col]==0&&line<6&&line>=0&&col<6&&col>=0)
 				{
-					t.x = i;
-					t.y = j;
-					t.dir = -1;
-					s->data[s->top].dir = k;
-					push(s, t);
-					maze[i][j] = -1;
+			
+					next.x=line;
+					next.y=col;
+					next.di=-1;
+					s->data[s->top].di=direct;
+					push(s,next);
+					maze[line][col]=-1;
 					break;
 				}
 			}
-			if (4 == k)	//四个方向都不能走
+			if(direct==4)
 			{
 				pop(s);
-				maze[now.x][now.y] = 0;
+				maze[temp.x][temp.y]=0;
 			}
 		}
 	}
+
 }
 int main()
 {
+	system("clear");
 	Stack stack;
-	InitStack(&stack);
-	Walk(&stack, 0, 0, 5, 5);
+	Init_Stack(&stack);
+	get_path(&stack,0,0,5,5);
 	return 0;
 }
