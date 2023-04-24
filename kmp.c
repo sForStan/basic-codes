@@ -47,7 +47,7 @@ int kmp(char s[], char t[])
 }
 int main()
 {
-	char s[] = "ADABCDABD";
-	char t[] = "DACDABD";
-	printf("%d",kmp(s,t));
+	char s[] = "ADABCDABD";//主串
+	char t[] = "DACDABD";//模式
+	printf("%d",kmp(s,t));//匹配就返回下标，否则返回-1
 }
