@@ -58,7 +58,7 @@ TreeNode* getnext(TreeNode* node)
 			return node->parent;
 		}
 		else{//如果是左孩子
-			if(node->parent->rtag==0){//右孩子为空
+			if(node->parent->rtag==0){//右孩子不为空
 				return getFirst(node->parent->rchild);
 			}
 			else{
