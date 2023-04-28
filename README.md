@@ -29,3 +29,5 @@
 >postTreadTree:后序线索树
 
 >preTreadTree:先序线索树
+
+>inTreadTree:中序线索树
